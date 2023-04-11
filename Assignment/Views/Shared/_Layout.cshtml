@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Assignment</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/Assignment.styles.css" asp-append-version="true" />
+</head>
+<body>
+	<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+		<div class="container-fluid">
+
+			<a asp-controller="Home" asp-action="Index"><img src="https://media.istockphoto.com/id/1125417461/vi/vec-to/bi%E1%BB%83u-t%C6%B0%E1%BB%A3ng-%C4%91i%E1%BB%87n-tho%E1%BA%A1i-b%C3%A0n-ph%C3%ADm-kh%C3%A1i-ni%E1%BB%87m-logo-%C4%91i%E1%BB%87n-tho%E1%BA%A1i-b%C3%A0n-ph%C3%ADm-h%E1%BB%A3p-th%E1%BB%9Di-trang-tr%C3%AAn-n%E1%BB%81n.jpg?s=1024x1024&w=is&k=20&c=RSrcuKzF8j89hNLPsipmwvcjWkyxndGgIrdXyqQWz5s=" alt="" width="100px" height="100px" style="padding-left:20px;"></a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+					aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between ">
+
+				<ul class="navbar-nav me-auto" style="padding-left: 30px; font-size:20px;">
+					<li class="nav-item">
+						<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
+					</li>
+					
+					<li class="nav-item">
+						<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ProductList">ProductList</a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle text-dark" asp-area="" asp-controller="" asp-action="" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Account
+						</a>
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Login">Login/Register</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Profile">Profile</a></li>
+							<li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="ShowCart">Cart</a></li>
+							<li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Bill">Bill</a></li>
+							<li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="container">
+		<div class="row">
+			<div class="col-3">
+				<div class="list-group">
+					<a asp-area="" asp-controller="" asp-action="" class="list-group-item list-group-item-action">Danh mục</a>
+					<a asp-area="" asp-controller="DanhMuc" asp-action="DienThoai" class="list-group-item list-group-item-action">Điện thoại</a>
+					<a asp-area="" asp-controller="DanhMuc" asp-action="LapTop" class="list-group-item list-group-item-action">Laptop</a>
+					<a asp-area="" asp-controller="DanhMuc" asp-action="MayTinhBang" class="list-group-item list-group-item-action">Máy tính bảng</a>
+					<a asp-area="" asp-controller="DanhMuc" asp-action="TV" class="list-group-item list-group-item-action">Ti vi</a>
+					<a asp-area="" asp-controller="DanhMuc" asp-action="HangCu" class="list-group-item list-group-item-action">Hàng cũ</a>
+					<a asp-area="" asp-controller="DanhMuc" asp-action="AmThanh" class="list-group-item list-group-item-action">Âm thanh</a>
+					<a asp-area="" asp-controller="DanhMuc" asp-action="DongHo" class="list-group-item list-group-item-action">Đồng hồ</a>
+				</div>
+			</div>
+			<div class="col-9">
+				<div id="demo" class="carousel slide" data-bs-ride="carousel">
+
+					<!-- Indicators/dots -->
+					<div class="carousel-indicators">
+						<button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
+						<button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
+						<button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
+					</div>
+
+					<!-- The slideshow/carousel -->
+					<div class="carousel-inner">
+						<div class="carousel-item active">
+							<img src="https://cdn1.hoanghamobile.com/tin-tuc/wp-content/uploads/2020/07/banner-trang-tin-sale.jpg" alt="Los Angeles" class="d-block" style="width:100% ; height:450px;">
+						</div>
+						<div class="carousel-item">
+							<img src="https://galaxydidong.vn/wp-content/uploads/2021/07/online-banner.jpg" alt="Chicago" class="d-block" style="width:100% ;height:450px;">
+						</div>
+						<div class="carousel-item">
+							<img src="https://imaxmobile.vn/media/data/banner/BANNER-5.png" alt="New York" class="d-block" style="width:100% ; height:450px;">
+						</div>
+					</div>
+
+					<!-- Left and right controls/icons -->
+					<button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon"></span>
+					</button>
+					<button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+						<span class="carousel-control-next-icon"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<article class="row" style="background-color :white;">
+				<main role="main" class="pb-3">
+					@RenderBody()
+				</main>
+			</article>
+		</div>
+
+	</div>
+
+	<footer class="border-top footer text-muted">
+		<div class="text-center">
+			&copy; 2023 - Assignment - namntph23972
+		</div>
+	</footer>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
