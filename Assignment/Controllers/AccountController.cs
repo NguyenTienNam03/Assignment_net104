@@ -109,15 +109,23 @@ namespace Assignment.Controllers
 		public IActionResult UpdateAmount(Guid ID, int Quantity)
 		{
 			var idsp = _icartdetal.GetCartDetailById(ID);
-			var cartdetail = new CartDetails()
+			if(idsp.Quantity >= Quantity)
 			{
-				ID = ID,
-				IDSp = idsp.IDSp,
-				UserID = idsp.UserID,
-				Quantity = Quantity,
-			};
-			_icartdetal.UpdateCartDetail(cartdetail);
-			return RedirectToAction("ShowCart", "Account");
+				var cartdetail = new CartDetails()
+				{
+					ID = ID,
+					IDSp = idsp.IDSp,
+					UserID = idsp.UserID,
+					Quantity = Quantity,
+				};
+				_icartdetal.UpdateCartDetail(cartdetail);
+				return RedirectToAction("ShowCart", "Account");
+			}else
+			{
+				ViewBag.soluong = "Số lượng tồn của sản phẩm không đủ với số lượng bạn yêu cầu.";
+				return RedirectToAction("ShowCart", "Account");
+			}
+		
 		}
 		public IActionResult Register()
 		{
@@ -126,33 +134,41 @@ namespace Assignment.Controllers
 		[HttpPost]
 		public IActionResult Register(User user)
 		{
-			var CheckEmail = db.Users.FirstOrDefault(c => c.Email == user.Email);
+			try
+			{
+				var CheckEmail = db.Users.FirstOrDefault(c => c.Email == user.Email);
 
-			if (db.Users.Any(c => c.Email == user.Email) == true)
+				if (db.Users.Any(c => c.Email == user.Email) == true)
+				{
+					ViewBag.error = "Email da ton tai.";
+					return View();
+					//return RedirectToAction("Index");
+				}
+				else if (_check.CheckSDT(user.PhoneNumber) == false)
+				{
+					ViewBag.ValidatePhone = "Số điện thoại gồm có 10 số và có số 0 ở đầu.";
+					return View();
+				}
+				else if (_iuser.GetAllUsers().Any(c => c.PhoneNumber == user.PhoneNumber) == true)
+				{
+					ViewBag.phonenumber = "SĐT này đã được đăng kí.";
+					return View();
+				}
+				else
+				{
+
+					user.Status = 1;
+					user.IDRole = db.Roles.Where(c => c.RoleName == "Customer").Select(c => c.IdRole).FirstOrDefault();
+					_iuser.AddUser(user);
+					return RedirectToAction("Login", "Account");
+
+				}
+			} catch
 			{
-				ViewBag.error = "Email da ton tai.";
-				return View();
-				//return RedirectToAction("Index");
-			} else if (_check.CheckSDT(user.PhoneNumber) == false)
-			{
-				ViewBag.ValidatePhone = "Số điện thoại gồm có 10 số và có số 0 ở đầu.";
-				return View();
-			} else if (_iuser.GetAllUsers().Any(c => c.PhoneNumber == user.PhoneNumber) == true)
-			{
-				ViewBag.phonenumber = "SĐT này đã được đăng kí.";
+				ViewBag.Resgister = "Bạn nhập đầy đủ thông tin";
 				return View();
 			}
-			else
-			{
-
-				user.Status = 1;
-				user.IDRole = db.Roles.Where(c => c.RoleName == "Customer").Select(c => c.IdRole).FirstOrDefault();
-				_iuser.AddUser(user);
-				return RedirectToAction("Login", "Account");
-
-			}
-
-			return View();
+			
 		}
 
 		[HttpGet]

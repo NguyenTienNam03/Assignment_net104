@@ -19,6 +19,10 @@
 		@ViewBag.Thongbao
 	</div>
 }
+@if (ViewBag.soluong != null)
+{
+	<p class="alert alert-danger" role="alert">@ViewBag.soluong</p>
+}
 <table class="table">
 	<thead>
 		<tr>
@@ -76,7 +80,7 @@
 						<input type="number" name="Quantity" value="@item.Quantity" />
 						<button type="submit" class="btn btn-primary">Cập nhật</button>
 					</form>
-
+					
 				</td>
 				<td>
 					<span class="text-muted">@(thanhtien.ToString("n0")) VND</span>
@@ -97,12 +101,12 @@
 	<td> @Model.Sum(m => m.Quantity) </td>
 	<td class="text-right">Tổng thành tiền:</td>
 	<td>@Model.Sum(m => m.Quantity * m.Price).ToString("#,##0").Replace(',', '.') VNĐ </td>
-	@*@if (ViewBag.soluong == 0)
+		@*@if (ViewBag.soluong == 0)
 	{*@
-		<td >
-			<a href="@Url.Action("CreateBill" , new {id = id})" onclick="return confirm('Bạn có muốn thanh toán không?');" class="btn btn-success btn-sm" "disabled">Thanh toán</a>
-		</td>
-	@*}*@
+	<td>
+		<a href="@Url.Action("CreateBill" , new {id = id})" onclick="return confirm('Bạn có muốn thanh toán không?');" class="btn btn-success btn-sm" "disabled">Thanh toán</a>
+	</td>
+		@*}*@
 	</tbody>
 
 </table>

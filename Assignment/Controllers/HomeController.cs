@@ -85,139 +85,178 @@ namespace Assignment.Controllers
 		//[Authorize(Roles = "Admin")]
 		public IActionResult CreateProduct()
 		{
-			ClaimsPrincipal claimsPrincipal = HttpContext.User;
-			if (claimsPrincipal.Identity.IsAuthenticated) // check xem đã đăng nhập chưa 
+			try
 			{
-				ViewBag.CategoryID = new SelectList(db.Categorys, "ID", "Name");
-				ViewBag.CapacityID = new SelectList(db.Capacities, "ID", "Capacitys");
-				ViewBag.SupplierID = new SelectList(db.Suppliers, "ID", "NameSupplier");
+				ClaimsPrincipal claimsPrincipal = HttpContext.User;
+				if (claimsPrincipal.Identity.IsAuthenticated) // check xem đã đăng nhập chưa 
+				{
+					ViewBag.CategoryID = new SelectList(db.Categorys, "ID", "Name");
+					ViewBag.CapacityID = new SelectList(db.Capacities, "ID", "Capacitys");
+					ViewBag.SupplierID = new SelectList(db.Suppliers, "ID", "NameSupplier");
 
-			}
-			else
+				}
+				else
+				{
+					return RedirectToAction("Login", "Account");
+				}
+				return View();
+			} catch
 			{
-				return RedirectToAction("Login", "Account");
+				return RedirectToAction("Index", "Home");
 			}
 			
-			return View();
 		}
 		[HttpPost]
 		//[Authorize(Roles = "Admin")]
 		public IActionResult CreateProduct(Product products)
 		{
-			ViewBag.CategoryID = new SelectList(db.Categorys, "ID", "Name", products.CategoryID);
-			ViewBag.CapacityID = new SelectList(db.Capacities, "ID", "Capacitys", products.CapacityID);
-			ViewBag.SupplierID = new SelectList(db.Suppliers, "ID", "NameSupplier", products.SupplierID);
-			products.Status = 1;
-			productsService.CreateProduct(products);
-			return RedirectToAction("Index","Home");
+			try
+			{
+				ViewBag.CategoryID = new SelectList(db.Categorys, "ID", "Name", products.CategoryID);
+				ViewBag.CapacityID = new SelectList(db.Capacities, "ID", "Capacitys", products.CapacityID);
+				ViewBag.SupplierID = new SelectList(db.Suppliers, "ID", "NameSupplier", products.SupplierID);
+				products.Status = 1;
+				productsService.CreateProduct(products);
+				return RedirectToAction("Index", "Home");
+			} catch
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			
 		}
 
 		[HttpGet]
 		//[Authorize(Roles = "Admin")]
 		public IActionResult Update(Guid id)
 		{
-			ClaimsPrincipal claimsPrincipal = HttpContext.User;
-			if (claimsPrincipal.Identity.IsAuthenticated) // check xem đã đăng nhập chưa 
+			try
 			{
-				var p = productsService.GetProductById(id);
-				ViewBag.CategoryID = new SelectList(db.Categorys, "ID", "Name", p.CategoryID);
-				ViewBag.CapacityID = new SelectList(db.Capacities, "ID", "Capacitys", p.CapacityID);
-				ViewBag.SupplierID = new SelectList(db.Suppliers, "ID", "NameSupplier", p.SupplierID);
-				return View(p);
-			}
-			else
+				ClaimsPrincipal claimsPrincipal = HttpContext.User;
+				if (claimsPrincipal.Identity.IsAuthenticated) // check xem đã đăng nhập chưa 
+				{
+					var p = productsService.GetProductById(id);
+					ViewBag.CategoryID = new SelectList(db.Categorys, "ID", "Name", p.CategoryID);
+					ViewBag.CapacityID = new SelectList(db.Capacities, "ID", "Capacitys", p.CapacityID);
+					ViewBag.SupplierID = new SelectList(db.Suppliers, "ID", "NameSupplier", p.SupplierID);
+					return View(p);
+				}
+				else
+				{
+					return RedirectToAction("Login", "Account");
+				}
+			} catch
 			{
-				return RedirectToAction("Login", "Account");
+				return RedirectToAction("Index", "Home");
 			}
+			
 			
 		}
 		//[Authorize(Roles = "Admin")]
 		[HttpPost]	
 		public IActionResult Update(Product p)
 		{
-			if(p.AvailableQuantity > 0 )
+			try
 			{
-                if (productsService.UpdateProduct(p))
-                {
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    return BadRequest();
-                }
+				if (p.AvailableQuantity > 0)
+				{
+					if (productsService.UpdateProduct(p))
+					{
+						return RedirectToAction("Index");
+					}
+					else
+					{
+						return BadRequest();
+					}
+				}
+				else
+				{
+					p.Status = 0;
+					productsService.UpdateProduct(p);
+					return RedirectToAction("Index");
+				}
+			} catch
+			{
+				return RedirectToAction("Index", "Home");
 			}
-			else
-			{
-				p.Status = 0;
-				productsService.UpdateProduct(p);
-                return RedirectToAction("Index");
-            }
-			
-
 		}
 		//[Authorize(Roles = "Admin")]
 		public IActionResult Delete(Guid id)
 		{
-			ClaimsPrincipal claimsPrincipal = HttpContext.User;
-			if (claimsPrincipal.Identity.IsAuthenticated) // check xem đã đăng nhập chưa 
+			try
 			{
-				productsService.DeleteProduct(id);
-				return RedirectToAction("Index");
+				ClaimsPrincipal claimsPrincipal = HttpContext.User;
+				if (claimsPrincipal.Identity.IsAuthenticated) // check xem đã đăng nhập chưa 
+				{
+					productsService.DeleteProduct(id);
+					return RedirectToAction("Index");
+				}
+				else
+				{
+					return RedirectToAction("Login", "Account");
+				}
 			}
-			else
+			catch
 			{
-				return RedirectToAction("Login", "Account");
+				return RedirectToAction("Index", "Home");
 			}
+			
 				
 		}
 		public IActionResult AddToCart(Guid id)
 		{
-			ClaimsPrincipal claimsPrincipal = HttpContext.User;
-			if (claimsPrincipal.Identity.IsAuthenticated) // check xem đã đăng nhập chưa 
+			try
 			{
-				List<Cart> cart = new List<Cart>();
-				List<CartDetails> cartDetails1 = new List<CartDetails>();
-				List<Product> product = new List<Product>();
-				var user = HttpContext.User; // người dùng đăng nhập
-				var email = user.FindFirstValue(ClaimTypes.Email); // lấy email của người dùng khi đăng nhập
-				var IdUser = _iuser.GetAllUsers().Where(c => c.Email == email).Select(c => c.UserID).FirstOrDefault();
-				var idproduct = productsService.GetProductById(id);
-				if (_icartService.GetAllCarts().Any(c => c.UserID == IdUser) == false)
+				ClaimsPrincipal claimsPrincipal = HttpContext.User;
+				if (claimsPrincipal.Identity.IsAuthenticated) // check xem đã đăng nhập chưa 
 				{
-					Cart newcart = new Cart()
+					List<Cart> cart = new List<Cart>();
+					List<CartDetails> cartDetails1 = new List<CartDetails>();
+					List<Product> product = new List<Product>();
+					var user = HttpContext.User; // người dùng đăng nhập
+					var email = user.FindFirstValue(ClaimTypes.Email); // lấy email của người dùng khi đăng nhập
+					var IdUser = _iuser.GetAllUsers().Where(c => c.Email == email).Select(c => c.UserID).FirstOrDefault();
+					var idproduct = productsService.GetProductById(id);
+					if (_icartService.GetAllCarts().Any(c => c.UserID == IdUser) == false)
 					{
-						UserID = IdUser,
-						Description = "Newcart"
-					};
-					_icartService.AddCart(newcart);
-				}
-				var idgh = _icartService.GetCartById(IdUser);
-				if (_icartdetal.GetCartDetail().Any(c => c.IDSp == id) == false)
-				{
-					CartDetails newcartdetail = new CartDetails()
+						Cart newcart = new Cart()
+						{
+							UserID = IdUser,
+							Description = "Newcart"
+						};
+						_icartService.AddCart(newcart);
+					}
+					var idgh = _icartService.GetCartById(IdUser);
+					if (_icartdetal.GetCartDetail().Any(c => c.IDSp == id) == false)
 					{
-						ID = Guid.NewGuid(),
-						IDSp = idproduct.ID,
-						UserID = idgh.UserID,
-						Price = idproduct.Price,
-						Quantity = 1,
+						CartDetails newcartdetail = new CartDetails()
+						{
+							ID = Guid.NewGuid(),
+							IDSp = idproduct.ID,
+							UserID = idgh.UserID,
+							Price = idproduct.Price,
+							Quantity = 1,
 
-					};
-					_icartdetal.AddCartDetail(newcartdetail);
+						};
+						_icartdetal.AddCartDetail(newcartdetail);
+					}
+					else
+					{
+						var soluong = cartDetails1.Where(c => c.IDSp == id).Select(c => c.Quantity).FirstOrDefault();
+						CartDetails cartupdate = _icartdetal.GetCartDetail().FirstOrDefault(c => c.IDSp == id);
+						cartupdate.Quantity = cartupdate.Quantity + 1;
+						_icartdetal.UpdateCartDetail(cartupdate);
+					}
+					return RedirectToAction("ShowCart", "Account");
 				}
 				else
 				{
-					var soluong = cartDetails1.Where(c => c.IDSp == id).Select(c => c.Quantity).FirstOrDefault();
-					CartDetails cartupdate = _icartdetal.GetCartDetail().FirstOrDefault(c => c.IDSp == id);
-					cartupdate.Quantity = cartupdate.Quantity + 1;
-					_icartdetal.UpdateCartDetail(cartupdate);
+					return RedirectToAction("Login", "Account");
 				}
-				return RedirectToAction("ShowCart" , "Account");
-			}
-			else
+			} catch
 			{
-				return RedirectToAction("Login", "Account");
+				return RedirectToAction("Index", "Home");
 			}
+			
 		}
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()

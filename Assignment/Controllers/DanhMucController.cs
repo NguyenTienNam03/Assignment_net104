@@ -37,7 +37,7 @@ namespace Assignment.Controllers
 		public IActionResult DienThoai(int? pageNumber)
 		{
 			int pageSize = 8;
-			var list = db.Products.Include(c => c.Category).Include(c => c.Capacity).Include(c => c.Supplier).Where(c => c.Category.Description == "Đồng hồ" && c.AvailableQuantity > 0);
+			var list = db.Products.Include(c => c.Category).Include(c => c.Capacity).Include(c => c.Supplier).Where(c => c.Category.Description == "Điện thoại" && c.AvailableQuantity > 0);
 			return View(PaginatedList<Product>.Create(list.ToList(), pageNumber ?? 1, pageSize));
 		}
 		public IActionResult LapTop(int? pageNumber)
@@ -87,6 +87,7 @@ namespace Assignment.Controllers
 		[HttpGet]
 		public IActionResult Update(Guid id)
 		{
+			
 			var p = productsService.GetProductById(id);
 			ViewBag.CategoryID = new SelectList(db.Categorys, "ID", "Name", p.CategoryID);
 			ViewBag.CapacityID = new SelectList(db.Capacities, "ID", "Capacitys", p.CapacityID);
@@ -95,14 +96,21 @@ namespace Assignment.Controllers
 		}
 		public IActionResult Update(Product p)
 		{
-			if (productsService.UpdateProduct(p))
+			try
 			{
-				return RedirectToAction("Index" , "Home");
-			}
-			else
+				if (productsService.UpdateProduct(p))
+				{
+					return RedirectToAction("Index", "Home");
+				}
+				else
+				{
+					return BadRequest();
+				}
+			} catch
 			{
-				return BadRequest();
+				return RedirectToAction("Index", "Home");
 			}
+			
 
 		}
 		public IActionResult Delete(Guid id)
@@ -112,92 +120,57 @@ namespace Assignment.Controllers
 		}
 		public IActionResult AddToCart(Guid id)
 		{
-			ClaimsPrincipal claimsPrincipal = HttpContext.User;
-			if (claimsPrincipal.Identity.IsAuthenticated) // check xem đã đăng nhập chưa 
+			try
 			{
-				List<Cart> cart = new List<Cart>();
-				List<CartDetails> cartDetails1 = new List<CartDetails>();
-				List<Product> product = new List<Product>();
-				var user = HttpContext.User; // người dùng đăng nhập
-				var email = user.FindFirstValue(ClaimTypes.Email); // lấy email của người dùng khi đăng nhập
-				var IdUser = _iuser.GetAllUsers().Where(c => c.Email == email).Select(c => c.UserID).FirstOrDefault();
-				var idproduct = productsService.GetProductById(id);
-				if (_icartService.GetAllCarts().Any(c => c.UserID == IdUser) == false)
+				ClaimsPrincipal claimsPrincipal = HttpContext.User;
+				if (claimsPrincipal.Identity.IsAuthenticated) // check xem đã đăng nhập chưa 
 				{
-					Cart newcart = new Cart()
+					List<Cart> cart = new List<Cart>();
+					List<CartDetails> cartDetails1 = new List<CartDetails>();
+					List<Product> product = new List<Product>();
+					var user = HttpContext.User; // người dùng đăng nhập
+					var email = user.FindFirstValue(ClaimTypes.Email); // lấy email của người dùng khi đăng nhập
+					var IdUser = _iuser.GetAllUsers().Where(c => c.Email == email).Select(c => c.UserID).FirstOrDefault();
+					var idproduct = productsService.GetProductById(id);
+					if (_icartService.GetAllCarts().Any(c => c.UserID == IdUser) == false)
 					{
-						UserID = IdUser,
-						Description = "Newcart"
-					};
-				}
-				var idgh = _icartService.GetCartById(IdUser);
-				if (_icartdetal.GetCartDetail().Any(c => c.IDSp == id) == false)
-				{
-					CartDetails newcartdetail = new CartDetails()
+						Cart newcart = new Cart()
+						{
+							UserID = IdUser,
+							Description = "Newcart"
+						};
+					}
+					var idgh = _icartService.GetCartById(IdUser);
+					if (_icartdetal.GetCartDetail().Any(c => c.IDSp == id) == false)
 					{
-						ID = Guid.NewGuid(),
-						IDSp = idproduct.ID,
-						UserID = idgh.UserID,
-						Quantity = 1,
+						CartDetails newcartdetail = new CartDetails()
+						{
+							ID = Guid.NewGuid(),
+							IDSp = idproduct.ID,
+							UserID = idgh.UserID,
+							Quantity = 1,
 
-					};
-					_icartdetal.AddCartDetail(newcartdetail);
+						};
+						_icartdetal.AddCartDetail(newcartdetail);
+					}
+					else
+					{
+						var soluong = cartDetails1.Where(c => c.IDSp == id).Select(c => c.Quantity).FirstOrDefault();
+						CartDetails cartupdate = _icartdetal.GetCartDetail().FirstOrDefault(c => c.IDSp == id);
+						cartupdate.Quantity = cartupdate.Quantity + 1;
+						_icartdetal.UpdateCartDetail(cartupdate);
+					}
+					return RedirectToAction("ShowCart", "Home");
 				}
 				else
 				{
-					var soluong = cartDetails1.Where(c => c.IDSp == id).Select(c => c.Quantity).FirstOrDefault();
-					CartDetails cartupdate = _icartdetal.GetCartDetail().FirstOrDefault(c => c.IDSp == id);
-					cartupdate.Quantity = cartupdate.Quantity + 1;
-					_icartdetal.UpdateCartDetail(cartupdate);
+					return RedirectToAction("Login", "Account");
 				}
-				//var cartdetal = SessionService.GetObjFormSession(HttpContext.Session, "Cart");
-
-				//if (cartdetal.Count == 0)
-				//{
-				//	Product idproduct = productsService.GetProductById(id);
-
-				//	CartDetails newcart = new CartDetails()
-				//	{
-				//		ID = Guid.NewGuid(),
-				//		IDSp = idproduct.ID,
-				//		UserID = IdUser,
-				//		Quantity = 1,
-
-				//	};
-				//	cartdetal.Add(newcart);
-				//	_icartdetal.AddCartDetail(newcart);
-				//	SessionService.SetObjSession(HttpContext.Session, "Cart", cartdetal);
-				//}
-				//else
-				//{
-				//	List<Product> pro = new List<Product>();
-				//	var idsp1 = _icartdetal.GetCartDetail().FirstOrDefault(c => c.IDSp == id);
-				//	if (SessionService.CheckSession(id, cartdetal))
-				//	{
-				//		CartDetails cart = cartdetal.FirstOrDefault(c => c.IDSp == id);
-				//		cart.Quantity ++;
-				//	}
-				//	else
-				//	{
-				//		Product idproduct = productsService.GetProductById(id);
-				//		CartDetails newcart = new CartDetails()
-				//		{
-				//			ID = Guid.NewGuid(), // thay thanh iduser
-				//			IDSp = idproduct.ID,
-				//			UserID = IdUser, //thay thanh iduser
-				//			Quantity = 1,
-
-				//		};
-				//		cartdetal.Add(newcart);
-				//		SessionService.SetObjSession(HttpContext.Session, "Cart", cartdetal);
-				//	}
-				//}
-				return RedirectToAction("ShowCart" , "Home");
-			}
-			else
+			} catch
 			{
-				return RedirectToAction("Login", "Home");
+				return RedirectToAction("Index", "Home");
 			}
+			
 		}
 
 	}

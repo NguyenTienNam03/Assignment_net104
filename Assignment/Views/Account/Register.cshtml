@@ -1,7 +1,7 @@
 ﻿
 @model Assignment.Models.Data.User
 
-<style>
+@*<style>
 	form {
 		border: 2px solid black;
 		width: 500px;
@@ -26,16 +26,31 @@
 		padding: 2px;
 		margin: 2px;
 	}
-</style>
+</style>*@
 
-<div>
-	
+@if (ViewBag.error != null)
+{
+	<span class="badge badge-danger">@ViewBag.error</span>
+}
+@if (ViewBag.phonenumber != null)
+{
+	<span class="badge badge-danger">@ViewBag.phonenumber</span>
+}
+@if (ViewBag.ValidatePhone != null)
+{
+	<span class="badge badge-danger">@ViewBag.ValidatePhone</span>
+}
+@if (ViewBag.Resgister != null)
+{
+	<span class="badge badge-danger">@ViewBag.Resgister</span>
+}
+@*<div>
 	
 	
 	<form asp-action="Register">
 		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 		<h2 class="text-center">Đăng ký tài khoản</h2>
-		@*<div class="form-group">
+		<div class="form-group">
 		<label asp-for="UserID" class="control-label"></label>
 		<input asp-for="UserID" class="form-control" />
 		<span asp-validation-for="UserID" class="text-danger"></span>
@@ -44,7 +59,7 @@
 		<label asp-for="IDRole" class="control-label"></label>
 		<input asp-for="IDRole" class="form-control" />
 		<span asp-validation-for="IDRole" class="text-danger"></span>
-		</div>*@
+		</div>
 		<div class="form-group row">
 			<div class="col-3">
 				<label asp-for="Name" class="control-label"></label>
@@ -61,10 +76,7 @@
 			<div class="col-9">
 				<input asp-for="Email" type="email" class="form-control" />
 				<span asp-validation-for="Email" class="text-danger"></span>
-				@if (ViewBag.error != null)
-				{
-					<span class="badge badge-danger">@ViewBag.error</span>
-				}
+				
 
 			</div>
 		</div>
@@ -84,14 +96,7 @@
 			<div class="col-9">
 				<input asp-for="PhoneNumber" class="form-control" />
 				<span asp-validation-for="PhoneNumber" class="text-danger"></span>
-				@if (ViewBag.phonenumber != null)
-				{
-					<span class="badge badge-danger">@ViewBag.phonenumber</span>
-				}
-				@if (ViewBag.ValidatePhone != null)
-				{
-					<span class="badge badge-danger">@ViewBag.ValidatePhone</span>
-				}
+				
 			</div>
 		</div>
 		<div class="form-group row">
@@ -103,11 +108,11 @@
 				<span asp-validation-for="Address" class="text-danger"></span>
 			</div>
 		</div>
-		@*<div class="form-group">
+		<div class="form-group">
 		<label asp-for="Status" class="control-label"></label>
 		<input asp-for="Status" class="form-control" />
 		<span asp-validation-for="Status" class="text-danger"></span>
-		</div>*@
+		</div>
 		<div class="form-group">
 				<input type="submit" value="Register" class="btn btn-primary" style="margin:auto;"/>
 		</div>
@@ -117,5 +122,58 @@
 
 <div>
 	<a asp-action="Login">Login</a>
-</div>
+</div>*@
+<section class="vh-100 gradient-custom">
+	<div class="container py-5 h-100">
+		<div class="row d-flex justify-content-center align-items-center h-100">
+			<div class="col-12 col-md-8 col-lg-6 col-xl-5">
+				<div class="card bg-dark text-white" style="border-radius: 1rem; width:550px;">
+					<div class="card-body p-5 text-center">
+
+						<div class="mb-md-5 mt-md-4 pb-5">
+							<form asp-action="Register" style="border-color:rgba(var(--bs-dark-rgb),var(--bs-bg-opacity));">
+								<h2 class="fw-bold mb-2 text-uppercase">Register</h2>
+								<p class="text-white-50 mb-5">Please enter all information!</p>
+
+								<div class="form-outline form-white mb-4">
+									<label class="form-label">FullName</label>
+									<input type="text" asp-for="Name" class="form-control form-control-lg" />
+
+								</div>
+
+								<div class="form-outline form-white mb-4">
+									<label class="form-label">Email</label>
+									<input type="email" asp-for="Email" class="form-control form-control-lg" />
+
+								</div>
+								<div class="form-outline form-white mb-4">
+									<label class="form-label">Password</label>
+									<input type="password" asp-for="Password" class="form-control form-control-lg" />
+								</div>
+
+								<div class="form-outline form-white mb-4">
+									<label class="form-label">PhoneNumber</label>
+									<input type="number" asp-for="PhoneNumber" class="form-control form-control-lg" />
+
+								</div>
+								<div class="form-outline form-white mb-4">
+									<label class="form-label">Address</label>
+									<input type="text" asp-for="Address" class="form-control form-control-lg" />
+
+								</div>
+								@*<a type="submit" name="submit" value="Login"></a>*@
+								<button class="btn btn-outline-light btn-lg px-5" type="submit" name="Register" value="Register"> Register </button>
+								<div>
+									<p class="text-center text-muted mt-5 mb-0">
+										Have already an account? <a asp-action="Login"><u>Login here</u></a>
+									</p>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
 
