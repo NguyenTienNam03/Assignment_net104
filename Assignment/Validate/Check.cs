@@ -15,7 +15,7 @@ namespace Assignment.Validate
 		}
 		public bool CheckPassWord(string password)
 		{
-			if (password.Length > 6 && password.All(c => char.IsLetterOrDigit(c)))
+			if (password.Length > 6 && Regex.IsMatch(password, "^[a-zA-Z0-9]+$"))
 			{
 				return true;
 			}
