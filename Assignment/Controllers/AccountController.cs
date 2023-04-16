@@ -97,7 +97,6 @@ namespace Assignment.Controllers
 						return RedirectToAction("ShowCart", "Account");
 					}
 				}
-				
 				//return RedirectToAction("ShowCart", "Account");
 			}
 			else
@@ -108,14 +107,15 @@ namespace Assignment.Controllers
 
 		public IActionResult UpdateAmount(Guid ID, int Quantity)
 		{
-			var idsp = _icartdetal.GetCartDetailById(ID);
-			if(idsp.Quantity >= Quantity)
+			var idcartdeatil = _icartdetal.GetCartDetailById(ID);
+			var spluongsanpham = productsService.GetAllProducts().Where(c => c.ID == idcartdeatil.IDSp).Select(c => c.AvailableQuantity).FirstOrDefault();
+			if(spluongsanpham >= Quantity)
 			{
 				var cartdetail = new CartDetails()
 				{
 					ID = ID,
-					IDSp = idsp.IDSp,
-					UserID = idsp.UserID,
+					IDSp = idcartdeatil.IDSp,
+					UserID = idcartdeatil.UserID,
 					Quantity = Quantity,
 				};
 				_icartdetal.UpdateCartDetail(cartdetail);

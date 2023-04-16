@@ -86,14 +86,17 @@
                 @Html.DisplayFor(modelItem => item.Features)
             </td>
             <td>
-                    @if(item.Status == 0)
-                    {
-                        <p>Hết hàng</p>
-                    } 
-                    @if(item.Status == 1)
+                    @if(item.AvailableQuantity > 0)
                     {
                         <p>Còn hàng</p>
                     }
+                    else
+                    {
+                        <p>Hết hàng</p>
+                    }
+
+                        
+                    
                 </td>
             <td>
                 @Html.ActionLink("Edit", "Update", new { id = item.ID }) |

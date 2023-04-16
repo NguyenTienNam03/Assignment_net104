@@ -237,14 +237,24 @@ namespace Assignment.Controllers
 							Quantity = 1,
 
 						};
+						
 						_icartdetal.AddCartDetail(newcartdetail);
+						
 					}
 					else
 					{
 						var soluong = cartDetails1.Where(c => c.IDSp == id).Select(c => c.Quantity).FirstOrDefault();
 						CartDetails cartupdate = _icartdetal.GetCartDetail().FirstOrDefault(c => c.IDSp == id);
 						cartupdate.Quantity = cartupdate.Quantity + 1;
-						_icartdetal.UpdateCartDetail(cartupdate);
+                        //if (cartupdate.Quantity > soluong)
+                        //{
+                        //    ViewBag.Soluonghon = "Số lượng tồn không đủ với số lượng bạn yêu cầu.";
+                        //}
+                        //else
+                        //{
+                            _icartdetal.UpdateCartDetail(cartupdate);
+                        //}
+                        
 					}
 					return RedirectToAction("ShowCart", "Account");
 				}
