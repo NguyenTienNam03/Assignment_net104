@@ -236,6 +236,7 @@ namespace Assignment.Controllers
 							Price = idproduct.Price,
 							Quantity = 1,
 
+
 						};
 						
 						_icartdetal.AddCartDetail(newcartdetail);
