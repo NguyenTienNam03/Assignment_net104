@@ -66,7 +66,9 @@ namespace Assignment.Service
 				product.Price = p.Price;
 
 				product.AvailableQuantity = p.AvailableQuantity;
-
+				product.SupplierID = p.SupplierID;
+				product.CapacityID = p.CapacityID;
+				product.CategoryID = p.CategoryID;
 				product.Description = p.Description;
 				product.Status = p.Status;
 				product.Supplier = p.Supplier;

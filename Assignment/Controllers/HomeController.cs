@@ -115,9 +115,18 @@ namespace Assignment.Controllers
 				ViewBag.CategoryID = new SelectList(db.Categorys, "ID", "Name", products.CategoryID);
 				ViewBag.CapacityID = new SelectList(db.Capacities, "ID", "Capacitys", products.CapacityID);
 				ViewBag.SupplierID = new SelectList(db.Suppliers, "ID", "NameSupplier", products.SupplierID);
-				products.Status = 1;
-				productsService.CreateProduct(products);
-				return RedirectToAction("Index", "Home");
+
+				if(productsService.GetAllProducts().Any(c => c.NameProduct == products.NameProduct && c.SupplierID  == products.SupplierID) == true)
+				{
+					return Content("Tên sản phẩm và nhà cung câp bị trùng.");
+
+				}
+				else
+				{
+					products.Status = 1;
+					productsService.CreateProduct(products);
+					return RedirectToAction("Index", "Home");
+				}
 			} catch
 			{
 				return RedirectToAction("Index", "Home");
@@ -159,6 +168,12 @@ namespace Assignment.Controllers
 			{
 				if (p.AvailableQuantity > 0)
 				{
+					if (productsService.GetAllProducts().Any(c => c.NameProduct == p.NameProduct && c.SupplierID == p.SupplierID) == true)
+					{
+						return Content("Tên sản phẩm và nhà cung câp bị trùng.");
+
+					} 
+					else
 					if (productsService.UpdateProduct(p))
 					{
 						return RedirectToAction("Index");
@@ -170,9 +185,7 @@ namespace Assignment.Controllers
 				}
 				else
 				{
-					p.Status = 0;
-					productsService.UpdateProduct(p);
-					return RedirectToAction("Index");
+					return Content("Số lượng lớn hơn 0.");
 				}
 			} catch
 			{
