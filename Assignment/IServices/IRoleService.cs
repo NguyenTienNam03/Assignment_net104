@@ -1,8 +1,9 @@
-﻿using Assignment.Models.Data;
+﻿using Assignment.Areas.Admin.Data.Data;
+using Assignment.Models.Data;
 
 namespace Assignment.IServices
 {
-	public interface IRoleService
+    public interface IRoleService
 	{
 		public bool AddRole(Role role);
 		public bool RemoveRole(Guid id);

@@ -1,4 +1,5 @@
-﻿using Assignment.IServices;
+﻿using Assignment.Areas.Admin.Controllers;
+using Assignment.IServices;
 using Assignment.Models;
 using Assignment.Models.Data;
 using Assignment.Service;
@@ -9,7 +10,7 @@ using System.Security.Claims;
 
 namespace Assignment.Controllers
 {
-	public class DanhMucController : Controller
+    public class DanhMucController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
 

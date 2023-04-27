@@ -1,9 +1,10 @@
-﻿using Assignment.Models.Data;
+﻿using Assignment.Areas.Admin.Data.Data;
+using Assignment.Models.Data;
 using System.Security;
 
 namespace Assignment.IServices
 {
-	public interface IUserService
+    public interface IUserService
 	{
 		public bool AddUser(User user);
 		public bool UpdateUser(User user);

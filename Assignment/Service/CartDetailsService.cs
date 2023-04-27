@@ -1,10 +1,11 @@
-﻿using Assignment.IServices;
+﻿using Assignment.Areas.Admin.Data.Data;
+using Assignment.IServices;
 using Assignment.Models.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Assignment.Service
 {
-	public class CartDetailsService : ICartDetialsService
+    public class CartDetailsService : ICartDetialsService
 	{
 		public Shopping_Dbcontext _context;
 		public CartDetailsService() 

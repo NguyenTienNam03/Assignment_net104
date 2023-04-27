@@ -1,10 +1,11 @@
-﻿using Assignment.Models.Data;
+﻿using Assignment.Areas.Admin.Data.Data;
+using Assignment.Models.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Assignment.Models.Configurations
 {
-	public class ProductConfiguration : IEntityTypeConfiguration<Product>
+    public class ProductConfiguration : IEntityTypeConfiguration<Product>
 	{
 		public void Configure(EntityTypeBuilder<Product> builder)
 		{

@@ -11,10 +11,11 @@ using System.Collections.Immutable;
 using System.Collections.Generic;
 using NuGet.Packaging.Signing;
 using Assignment.Validate;
+using Assignment.Areas.Admin.Data.Data;
 
 namespace Assignment.Controllers
 {
-	public class AccountController : Controller
+    public class AccountController : Controller
 	{
 		private readonly ILogger<AccountController> _logger;
 

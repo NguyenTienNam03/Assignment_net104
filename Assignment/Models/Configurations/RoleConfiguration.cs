@@ -1,10 +1,11 @@
-﻿using Assignment.Models.Data;
+﻿using Assignment.Areas.Admin.Data.Data;
+using Assignment.Models.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Assignment.Models.Configurations
 {
-	public class RoleConfiguration : IEntityTypeConfiguration<Role>
+    public class RoleConfiguration : IEntityTypeConfiguration<Role>
 	{
 		public void Configure(EntityTypeBuilder<Role> builder)
 		{

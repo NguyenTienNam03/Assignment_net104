@@ -1,10 +1,11 @@
-﻿using Assignment.Models.Data;
+﻿using Assignment.Areas.Admin.Data.Data;
+using Assignment.Models.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Assignment.Models.Configurations
 {
-	public class BillDetailsConfiguration : IEntityTypeConfiguration<BillDetail>
+    public class BillDetailsConfiguration : IEntityTypeConfiguration<BillDetail>
 	{ 
 
 		public void Configure(EntityTypeBuilder<BillDetail> builder)

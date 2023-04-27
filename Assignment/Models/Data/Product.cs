@@ -2,7 +2,7 @@
 
 namespace Assignment.Models.Data
 {
-	public class Product
+    public class Product
 	{
 		public Guid ID { get; set; }
 		public Guid CategoryID { get; set; }

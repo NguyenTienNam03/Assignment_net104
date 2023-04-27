@@ -1,8 +1,9 @@
-﻿using Assignment.Models.Data;
+﻿using Assignment.Areas.Admin.Data.Data;
+using Assignment.Models.Data;
 
 namespace Assignment.IServices
 {
-	public interface ICartDetialsService
+    public interface ICartDetialsService
 	{
 		public bool AddCartDetail(CartDetails cd);
 		public bool UpdateCartDetail(CartDetails cd);

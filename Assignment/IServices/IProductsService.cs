@@ -1,8 +1,9 @@
-﻿using Assignment.Models.Data;
+﻿using Assignment.Areas.Admin.Data.Data;
+using Assignment.Models.Data;
 
 namespace Assignment.IServices
 {
-	public interface IProductsService
+    public interface IProductsService
 	{
 		public bool CreateProduct(Product p);
 		public bool UpdateProduct(Product p);

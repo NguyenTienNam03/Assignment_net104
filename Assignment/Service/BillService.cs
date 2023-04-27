@@ -1,10 +1,11 @@
-﻿using Assignment.IServices;
+﻿using Assignment.Areas.Admin.Data.Data;
+using Assignment.IServices;
 using Assignment.Models.Data;
 using System.Net.WebSockets;
 
 namespace Assignment.Service
 {
-	public class BillService : IBillSerivce
+    public class BillService : IBillSerivce
 	{
 		public Shopping_Dbcontext _context;
 		public BillService() 

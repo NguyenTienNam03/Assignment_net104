@@ -1,9 +1,10 @@
-﻿using Assignment.IServices;
+﻿using Assignment.Areas.Admin.Data.Data;
+using Assignment.IServices;
 using Assignment.Models.Data;
 
 namespace Assignment.Service
 {
-	public class CartService : ICartService
+    public class CartService : ICartService
 	{
 		public Shopping_Dbcontext _context;
 		public CartService()

@@ -1,10 +1,11 @@
 ﻿
+using Assignment.Areas.Admin.Data.Data;
 using Assignment.IServices;
 using Assignment.Models.Data;
 
 namespace Assignment.Service
 {
-	public class ProductsService : IProductsService
+    public class ProductsService : IProductsService
 	{
 		public Shopping_Dbcontext _context;
 		public ProductsService()

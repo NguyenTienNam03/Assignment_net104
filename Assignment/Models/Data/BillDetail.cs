@@ -1,6 +1,6 @@
 ﻿namespace Assignment.Models.Data
 {
-	public class BillDetail
+    public class BillDetail
 	{
 		public Guid Id { get; set; }
 		public Guid IdHD { get; set; }

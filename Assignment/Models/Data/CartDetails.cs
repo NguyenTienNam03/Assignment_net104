@@ -1,6 +1,6 @@
 ﻿namespace Assignment.Models.Data
 {
-	public class CartDetails
+    public class CartDetails
 	{
 		public Guid ID { get; set; }
 		public Guid UserID { get; set; }

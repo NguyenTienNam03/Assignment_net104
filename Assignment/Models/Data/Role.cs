@@ -1,6 +1,6 @@
 ﻿namespace Assignment.Models.Data
 {
-	public class Role
+    public class Role
 	{
 		public Guid IdRole { get; set; }
 		public string RoleName { get; set; }

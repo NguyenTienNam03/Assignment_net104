@@ -1,9 +1,10 @@
-﻿using Assignment.IServices;
+﻿using Assignment.Areas.Admin.Data.Data;
+using Assignment.IServices;
 using Assignment.Models.Data;
 
 namespace Assignment.Service
 {
-	public class RoleService : IRoleService
+    public class RoleService : IRoleService
 	{
 		public Shopping_Dbcontext _context;
 		public RoleService()
