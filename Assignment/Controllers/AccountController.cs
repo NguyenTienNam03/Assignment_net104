@@ -11,11 +11,11 @@ using System.Collections.Immutable;
 using System.Collections.Generic;
 using NuGet.Packaging.Signing;
 using Assignment.Validate;
-
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace Assignment.Controllers
 {
-    public class AccountController : Controller
+	public class AccountController : Controller
 	{
 		private readonly ILogger<AccountController> _logger;
 
@@ -80,10 +80,11 @@ namespace Assignment.Controllers
 				var email = user.FindFirstValue(ClaimTypes.Email); // lấy email của người dùng khi đăng nhập
 				var IdUser = _iuser.GetAllUsers().Where(c => c.Email == email).Select(c => c.UserID).FirstOrDefault();
 				var idgh = _icartService.GetCartById(IdUser);
-				if(idgh == null)
+				if (idgh == null)
 				{
 					return RedirectToAction("ShowCart", "Account");
-				} else
+				}
+				else
 				{
 					var ShoppingCart = db.CartDetails.Include(c => c.Product).Include(c => c.Cart).Where(c => c.UserID == idgh.UserID);
 					//List<CartDetails> ShoppingCart = _icartdetal.GetCartDetail().Where(c => c.UserID == idgh.UserID).ToList();
@@ -110,7 +111,7 @@ namespace Assignment.Controllers
 		{
 			var idcartdeatil = _icartdetal.GetCartDetailById(ID);
 			var spluongsanpham = productsService.GetAllProducts().Where(c => c.ID == idcartdeatil.IDSp).Select(c => c.AvailableQuantity).FirstOrDefault();
-			if(spluongsanpham >= Quantity)
+			if (spluongsanpham >= Quantity)
 			{
 				var cartdetail = new CartDetails()
 				{
@@ -121,12 +122,13 @@ namespace Assignment.Controllers
 				};
 				_icartdetal.UpdateCartDetail(cartdetail);
 				return RedirectToAction("ShowCart", "Account");
-			}else
+			}
+			else
 			{
 				ViewBag.soluong = "Số lượng tồn của sản phẩm không đủ với số lượng bạn yêu cầu.";
 				return RedirectToAction("ShowCart", "Account");
 			}
-		
+
 		}
 		public IActionResult Register()
 		{
@@ -164,12 +166,13 @@ namespace Assignment.Controllers
 					return RedirectToAction("Login", "Account");
 
 				}
-			} catch
+			}
+			catch
 			{
 				ViewBag.Resgister = "Bạn nhập đầy đủ thông tin";
 				return View();
 			}
-			
+
 		}
 
 		[HttpGet]
@@ -263,7 +266,7 @@ namespace Assignment.Controllers
 					return BadRequest();
 				}
 			}
-			catch 
+			catch
 			{
 				ViewBag.Error = "Update thong tin that bai.";
 			}
@@ -291,99 +294,108 @@ namespace Assignment.Controllers
 
 		public IActionResult CreateBill(Guid id)
 		{
-			
+
 			var soluongsp = _icartdetal.GetCartDetail().Where(c => c.UserID == id);
 			ViewBag.soluong = soluongsp.Count();
-			if(soluongsp.Count() > 0)
+			ClaimsPrincipal claimsPrincipal = HttpContext.User;
+			if (claimsPrincipal.Identity.IsAuthenticated) // check xem đã đăng nhập chưa 
 			{
-				//ClaimsPrincipal claimsPrincipal = HttpContext.User;
-				//if (claimsPrincipal.Identity.IsAuthenticated) // check xem đã đăng nhập chưa 
-				//{
-				List<Product> products = new List<Product>();
-				//var user = HttpContext.User; // người dùng đăng nhập
-				//var email = user.FindFirstValue(ClaimTypes.Email); // lấy email của người dùng khi đăng nhập
-				//var IdUser = _iuser.GetAllUsers().Where(c => c.Email == email).Select(c => c.UserID).FirstOrDefault();
-				var checkid = _iuser.GetUserById(id);
-				var IdUser = _iuser.GetAllUsers().FirstOrDefault(c => c.UserID == checkid.UserID);
-				var cartdetails = _icartdetal.GetCartDetail().Where(c => c.UserID == id).ToList();
-
-				// Tạo hoá đơn
-				Bill bill1 = new Bill()
+				if (soluongsp.Count() > 0)
 				{
-					ID = Guid.NewGuid(),
-                    UserId = IdUser.UserID,
-					MaHD = "HD" + Convert.ToString(_ibillservice.GetBillList().Count() + 1),
-					CreateDate = DateTime.Now,
-					Receiveddate = DateTime.Now.AddDays(3),
-					Status = 0,
-				};
-				_ibillservice.AddBill(bill1);
 
-				// thêm sản phẩm vào hoá đơn vừa tạo
-				foreach (var cartdetail in cartdetails)
-				{
-					var gia = productsService.GetAllProducts().Where(c => c.ID == cartdetail.IDSp).Select(c => c.Price).FirstOrDefault();
-					var billDetail = new BillDetail()
+					List<Product> products = new List<Product>();
+					var user = HttpContext.User; // người dùng đăng nhập
+					var email = user.FindFirstValue(ClaimTypes.Email); // lấy email của người dùng khi đăng nhập
+					var IdUser = _iuser.GetAllUsers().Where(c => c.Email == email).Select(c => c.UserID).FirstOrDefault();
+					//var checkid = _iuser.GetUserById(id);
+					//var IdUser = _iuser.GetAllUsers().FirstOrDefault(c => c.UserID == checkid.UserID);
+					var cartdetails = _icartdetal.GetCartDetail().Where(c => c.UserID == id).ToList();
+
+					// Tạo hoá đơn
+					Bill bill1 = new Bill()
 					{
-						Id = Guid.NewGuid(),
-						IdHD = bill1.ID,
-						IdSp = cartdetail.IDSp,
-						Price = cartdetail.Price,
-						Quantity = cartdetail.Quantity,
+						ID = Guid.NewGuid(),
+						UserId = IdUser,
+						//MaHD = "HD" + Convert.ToString(_ibillservice.GetBillList().Where(c => c.UserId == IdUser).Max(c => Convert.ToInt32(c.MaHD.Substring(2, c.MaHD.Length - 2)) + 1)),
+						MaHD = "HD" + Convert.ToString(_ibillservice.GetBillList().Where(c => c.UserId == IdUser).Count() + 1),
+						CreateDate = DateTime.Now,
+						Receiveddate = DateTime.Now.AddDays(3),
+						Status = 0,
 					};
-					_ibilldetailservice.AddBillDetails(billDetail);
+					_ibillservice.AddBill(bill1);
 
-					// Cap nhat lai so luong san pham
-					var Sanphamgoc = productsService.GetAllProducts().FirstOrDefault(c => c.ID == cartdetail.IDSp);
-					int soluongcon = Convert.ToInt32(Sanphamgoc.AvailableQuantity) - cartdetail.Quantity;
-					if(soluongcon > 0)
+					// thêm sản phẩm vào hoá đơn vừa tạo
+					foreach (var cartdetail in cartdetails)
 					{
-						var pro = new Product()
+						var gia = productsService.GetAllProducts().Where(c => c.ID == cartdetail.IDSp).Select(c => c.Price).FirstOrDefault();
+						var billDetail = new BillDetail()
 						{
-							ID = Sanphamgoc.ID ,
-							CapacityID = Sanphamgoc .CapacityID,
-							CategoryID = Sanphamgoc.CategoryID,
-							SupplierID = Sanphamgoc.SupplierID,
-							NameProduct = Sanphamgoc.NameProduct,
-							Image = Sanphamgoc.Image,
-							Color = Sanphamgoc.Color,
-							Status = Sanphamgoc.Status,
-							Description = Sanphamgoc.Description,
-							Features = Sanphamgoc.Features,
-							Price = Sanphamgoc.Price,
-							AvailableQuantity = soluongcon
+							Id = Guid.NewGuid(),
+							IdHD = bill1.ID,
+							IdSp = cartdetail.IDSp,
+							Price = cartdetail.Price,
+							Quantity = cartdetail.Quantity,
 						};
-						productsService.UpdateProduct( pro);
-					} 
-					else
-					{
-						var pro = new Product()
+						_ibilldetailservice.AddBillDetails(billDetail);
+
+						// Cap nhat lai so luong san pham
+						var Sanphamgoc = productsService.GetAllProducts().FirstOrDefault(c => c.ID == cartdetail.IDSp);
+						int soluongcon = Convert.ToInt32(Sanphamgoc.AvailableQuantity) - cartdetail.Quantity;
+						if (soluongcon > 0)
 						{
-							ID = Sanphamgoc.ID,
-							CapacityID = Sanphamgoc.CapacityID,
-							CategoryID = Sanphamgoc.CategoryID,
-							SupplierID = Sanphamgoc.SupplierID,
-							NameProduct = Sanphamgoc.NameProduct,
-							Image = Sanphamgoc.Image,
-							Color = Sanphamgoc.Color,
-							Status = 0,
-							Description = Sanphamgoc.Description,
-							Features = Sanphamgoc.Features,
-							Price = Sanphamgoc.Price,
-							AvailableQuantity = soluongcon
-						};
-						productsService.UpdateProduct(pro);
+							var pro = new Product()
+							{
+								ID = Sanphamgoc.ID,
+								CapacityID = Sanphamgoc.CapacityID,
+								CategoryID = Sanphamgoc.CategoryID,
+								SupplierID = Sanphamgoc.SupplierID,
+								NameProduct = Sanphamgoc.NameProduct,
+								Image = Sanphamgoc.Image,
+								Color = Sanphamgoc.Color,
+								Status = Sanphamgoc.Status,
+								Description = Sanphamgoc.Description,
+								Features = Sanphamgoc.Features,
+								Price = Sanphamgoc.Price,
+								AvailableQuantity = soluongcon
+							};
+							productsService.UpdateProduct(pro);
+						}
+						else
+						{
+							var pro = new Product()
+							{
+								ID = Sanphamgoc.ID,
+								CapacityID = Sanphamgoc.CapacityID,
+								CategoryID = Sanphamgoc.CategoryID,
+								SupplierID = Sanphamgoc.SupplierID,
+								NameProduct = Sanphamgoc.NameProduct,
+								Image = Sanphamgoc.Image,
+								Color = Sanphamgoc.Color,
+								Status = 0,
+								Description = Sanphamgoc.Description,
+								Features = Sanphamgoc.Features,
+								Price = Sanphamgoc.Price,
+								AvailableQuantity = soluongcon
+							};
+							productsService.UpdateProduct(pro);
+						}
+						_icartdetal.DeleteCartDetail(cartdetail.ID);
 					}
-					_icartdetal.DeleteCartDetail(cartdetail.ID);
+
+					return RedirectToAction("Bill", "Account");
 				}
-				
-				return RedirectToAction("Bill", "Account");
-			} else
+				else
+				{
+					ViewBag.Thongbao = "Gio hang khong the thanh toan khi chua co san pham? ";
+					return View();
+				}
+			}
+			else
 			{
-				ViewBag.Thongbao = "Gio hang khong the thanh toan khi chua co san pham? ";
+				ViewBag.Thongbao = "Bạn chưa đăng nhập ";
 				return View();
 			}
-			
+
 		}
 		public IActionResult BillDetail(Guid id)
 		{
@@ -419,7 +431,7 @@ namespace Assignment.Controllers
 
 			var billdetails = _ibilldetailservice.GetBillDetails().Where(c => c.IdHD == idhd.ID);
 
-			foreach(var billdetail in billdetails.ToList())
+			foreach (var billdetail in billdetails.ToList())
 			{
 				var idsp = productsService.GetProductById(billdetail.IdSp);
 				var soluonginbilldetail = _ibilldetailservice.GetBillDetails().Where(c => c.IdSp == idsp.ID).Select(c => c.Quantity).FirstOrDefault();
