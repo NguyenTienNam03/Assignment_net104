@@ -62,20 +62,20 @@ app.UseAuthorization();
 app.UseRouting();
 app.UseSession();
 
-app.UseEndpoints(endpoints =>
-{
-	endpoints.MapControllerRoute(
-	  name: "Admin",
-	  pattern: "{area:Admin}/{controller=Home}/{action=Index}/{id?}"
-	);
-});
-app.UseEndpoints(endpoints =>
-{
-	endpoints.MapControllerRoute(
-	  name: "Customer",
-	  pattern: "{area:Customer}/{controller=Home}/{action=Index}/{id?}"
-	);
-});
+//app.UseEndpoints(endpoints =>
+//{
+//	endpoints.MapControllerRoute(
+//	  name: "Admin",
+//	  pattern: "{area:Admin}/{controller=Home}/{action=Index}/{id?}"
+//	);
+//});
+//app.UseEndpoints(endpoints =>
+//{
+//	endpoints.MapControllerRoute(
+//	  name: "Customer",
+//	  pattern: "{area:Customer}/{controller=Home}/{action=Index}/{id?}"
+//	);
+//});
 
 app.MapControllerRoute(
 	name: "default",

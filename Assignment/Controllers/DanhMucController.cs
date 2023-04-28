@@ -1,5 +1,4 @@
-﻿using Assignment.Areas.Admin.Controllers;
-using Assignment.IServices;
+﻿using Assignment.IServices;
 using Assignment.Models;
 using Assignment.Models.Data;
 using Assignment.Service;

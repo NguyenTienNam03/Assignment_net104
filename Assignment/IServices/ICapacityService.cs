@@ -1,4 +1,4 @@
-﻿using Assignment.Areas.Admin.Data.Data;
+﻿
 using Assignment.Models.Data;
 
 namespace Assignment.IServices
