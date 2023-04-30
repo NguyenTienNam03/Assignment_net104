@@ -472,23 +472,33 @@ namespace Assignment.Controllers
 			_ibillservice.UpdateBill(bill);
 			return RedirectToAction("Bill", "Account");
 		}
-        [HttpGet]
-        public IActionResult ForgotPassWord()
-		{
-			return View();
-		}
 
-		[HttpPost]
 		public IActionResult ForgotPassWord(string email)
 		{
 			return View();
 		}
 
-		[HttpPost]
-		public IActionResult SendMail(string email)
+        public IActionResult SendMail(string email)
 		{
-			string test;
-			test = email;
+			if(_iuser.GetAllUsers().Any(c => c.Email == email) == true)
+			{
+                return RedirectToAction("NhapOTP", "Account");
+            }
+            else
+			{
+
+            }
+            return View();
+        }
+		public IActionResult NhapOTP(string otp)
+		{
+			if(otp != null)
+			{
+                return RedirectToAction("ForgotPassWord", "Account");
+            } else
+			{
+
+			}
 			return View();
 		}
 

@@ -1,0 +1,31 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+}
+<div class="container d-flex flex-column">
+    <div class="row align-items-center justify-content-center
+      min-vh-100 g-0">
+        <div class="col-12 col-md-8 col-lg-4 border-top border-3 border-primary">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5>Forgot Password?</h5>
+                        <p class="mb-2">
+                            Enter your registered email ID to reset the password
+                        </p>
+                    </div>
+                    <form asp-action="NhapOTP" method="get">
+                        <div class="mb-3">
+                            <label for="otp" class="form-label">Nhập OTP:</label>
+                            <input type="text" id="otp" name="otp" class="form-control" name="otp" placeholder="****" required="">
+                            @* <a href="@Url.Action("SendMail",new { email = Model.Email})" class="btn btn-primary btn-sm">Send Mail</a>*@
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
