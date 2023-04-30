@@ -472,5 +472,25 @@ namespace Assignment.Controllers
 			_ibillservice.UpdateBill(bill);
 			return RedirectToAction("Bill", "Account");
 		}
-	}
+        [HttpGet]
+        public IActionResult ForgotPassWord()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		public IActionResult ForgotPassWord(string email)
+		{
+			return View();
+		}
+
+		[HttpPost]
+		public IActionResult SendMail(string email)
+		{
+			string test;
+			test = email;
+			return View();
+		}
+
+    }
 }

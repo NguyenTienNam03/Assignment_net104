@@ -98,7 +98,7 @@
                                     <input type="password" asp-for="Password" class="form-control form-control-lg" />
                                 </div>
 
-                                <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">Forgot password?</a></p>
+                                <p class="small mb-5 pb-lg-2"><a asp-area="" asp-controller="Account" asp-action="ForgotPassWord" class="text-white-50 fw-bold">Forgot password?</a></p>
 
                                 @*<a type="submit" name="submit" value="Login"></a>*@
                                 <button class="btn btn-outline-light btn-lg px-5" type="submit" name="Login" value="Login"> Login </button>
