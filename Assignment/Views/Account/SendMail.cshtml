@@ -2,9 +2,13 @@
 
 @{
 	ViewData["Title"] = "SendMail";
-	var error = ViewBag.Error;
 }
-
+@if (ViewBag.ErrorSend != null)
+{
+	<div class="alert alert-danger" role="alert">
+		@ViewBag.ErrorSend
+	</div>
+}
 <div class="container d-flex flex-column">
 	<div class="row align-items-center justify-content-center
       min-vh-100 g-0">
@@ -21,8 +25,13 @@
 						<div class="mb-3">
 							<label for="Email" class="form-label">Email:</label>
 							<input type="email" asp-for="Email" id="email" class="form-control" name="email" placeholder="Enter Your Email" required="">
-							@*<a href="@Url.Action("SendMail",new { email = Model.Email})" class="btn btn-primary btn-sm">Send Mail</a>
-*@
+							@*<a href="@Url.Action("SendMail",new { email = Model.Email})" class="btn btn-primary btn-sm">Send Mail</a>*@
+							@if(ViewBag.Error != null)
+							{
+								<div class="alert alert-danger" role="alert">
+									@ViewBag.Error
+								</div>
+							}
 							<button type="submit" asp-controller="Account" asp-action="SendMail" class="btn btn-primary">Send Mail</button>
 						</div>
 

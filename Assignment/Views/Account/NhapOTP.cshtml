@@ -19,8 +19,14 @@
                     <form asp-action="NhapOTP" method="get">
                         <div class="mb-3">
                             <label for="otp" class="form-label">Nhập OTP:</label>
-                            <input type="text" id="otp" name="otp" class="form-control" name="otp" placeholder="****" required="">
-                            @* <a href="@Url.Action("SendMail",new { email = Model.Email})" class="btn btn-primary btn-sm">Send Mail</a>*@
+                            <input type="number" id="otp" name="otp" class="form-control" name="otp" placeholder="****" required="">
+                             @*<a href="@Url.Action("SendMail",new { email = Model.Email})" class="btn btn-primary btn-sm">Send Mail</a>*@
+                            @if (ViewBag.Error != null)
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    @ViewBag.Error
+                                </div>
+                            }
                             <button type="submit" class="btn btn-primary">Send</button>
                         </div>
                     </form>

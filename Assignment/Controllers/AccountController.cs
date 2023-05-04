@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using NuGet.Packaging.Signing;
 using Assignment.Validate;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using System.Net.Mail;
 
 namespace Assignment.Controllers
 {
@@ -478,29 +479,54 @@ namespace Assignment.Controllers
 			return View();
 		}
 
-        public IActionResult SendMail(string email)
-		{
-			if(_iuser.GetAllUsers().Any(c => c.Email == email) == true)
-			{
-                return RedirectToAction("NhapOTP", "Account");
-            }
-            else
-			{
 
-            }
-            return View();
-        }
-		public IActionResult NhapOTP(string otp)
+		public IActionResult SendMail(string email)
 		{
-			if(otp != null)
+			if (_iuser.GetAllUsers().Any(c => c.Email == email) == true)
 			{
-                return RedirectToAction("ForgotPassWord", "Account");
-            } else
-			{
+				MailMessage message = new MailMessage();
+				message.From = new MailAddress("nguyentiennam20122003@gmail.com");
 
+				message.To.Add(new MailAddress(email));
+				message.Subject = "Gui tu he thong dien thoai";
+				// random otp
+				Random random = new Random();
+				int rdint = random.Next(minValue: 1000, maxValue: 9999);
+				TempData["OTP"] = rdint;
+				message.Body = "Code cua ban la " + Convert.ToString(rdint);
+
+
+				message.IsBodyHtml = true;
+				SmtpClient client = new SmtpClient("smtp.gmail.com");
+				client.Port = 587;
+				client.Credentials = new System.Net.NetworkCredential("nguyentiennam20122003@gmail.com", "qhmnezrockgweuop");
+				client.EnableSsl = true;
+				client.Send(message);
+				return RedirectToAction("NhapOTP", "Account");
+			}
+			else
+			{
+				ViewBag.Error = "Mail cua ban chua dang ki.";
+				return View();
+			}
+		}
+		public IActionResult NhapOTP(int otp)
+		{
+			int  myotp = TempData["OTP"] ;
+			if (otp != Convert.ToInt32(myotp))
+			{
+				ViewBag.Error = "Mã OTP của bạn sai. Vui lòng nhập lại.";
+			}
+			else if (otp == Convert.ToInt32(myotp))
+			{
+				return RedirectToAction("ForgotPassWord", "Account");
+			}
+			else
+			{
+				ViewBag.Null = "Bạn không được để trống mã OTP.";
 			}
 			return View();
 		}
 
-    }
+	}
 }
