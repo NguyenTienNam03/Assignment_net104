@@ -474,16 +474,11 @@ namespace Assignment.Controllers
 			return RedirectToAction("Bill", "Account");
 		}
 
-		public IActionResult ForgotPassWord(string email)
-		{
-			return View();
-		}
-
-
 		public IActionResult SendMail(string email)
 		{
 			if (_iuser.GetAllUsers().Any(c => c.Email == email) == true)
 			{
+				HttpContext.Session.SetString("Email", email);
 				MailMessage message = new MailMessage();
 				message.From = new MailAddress("nguyentiennam20122003@gmail.com");
 
@@ -492,11 +487,12 @@ namespace Assignment.Controllers
 				// random otp
 				Random random = new Random();
 				int rdint = random.Next(minValue: 1000, maxValue: 9999);
-				TempData["OTP"] = rdint;
-				message.Body = "Code cua ban la " + Convert.ToString(rdint);
+				
+				message.Body = "Code cua ban la " + rdint;
 
+				HttpContext.Session.SetString("OPT", Convert.ToString(rdint));
 
-				message.IsBodyHtml = true;
+                message.IsBodyHtml = true;
 				SmtpClient client = new SmtpClient("smtp.gmail.com");
 				client.Port = 587;
 				client.Credentials = new System.Net.NetworkCredential("nguyentiennam20122003@gmail.com", "qhmnezrockgweuop");
@@ -512,12 +508,12 @@ namespace Assignment.Controllers
 		}
 		public IActionResult NhapOTP(int otp)
 		{
-			int  myotp = TempData["OTP"] ;
-			if (otp != Convert.ToInt32(myotp))
+			string OTP = HttpContext.Session.GetString("OPT");
+			if (otp != Convert.ToInt32(OTP))
 			{
 				ViewBag.Error = "Mã OTP của bạn sai. Vui lòng nhập lại.";
 			}
-			else if (otp == Convert.ToInt32(myotp))
+			else if (otp == Convert.ToInt32(OTP))
 			{
 				return RedirectToAction("ForgotPassWord", "Account");
 			}
@@ -527,6 +523,33 @@ namespace Assignment.Controllers
 			}
 			return View();
 		}
+		public IActionResult ForgotPassWord(string password, string repassword)
+		{
+			string email = HttpContext.Session.GetString("Email");
+			var iduser = _iuser.GetAllUsers().Where(c => c.Email == email).FirstOrDefault();
+			if (password == repassword)
+			{
+				_iuser.UpdateUser(new User()
+				{
+					UserID = iduser.UserID,
+					Name = iduser.Name,
+					Password = repassword,
+					IDRole = iduser.IDRole,
+					Address = iduser.Address,
+					Status = iduser.Status,
+					Email = email,
+					PhoneNumber = iduser.PhoneNumber,
+
+				});
+				return RedirectToAction("Login", "Account");
+			}
+			else
+			{
+				ViewBag.Error = "Mật khẩu không trùng khớp";
+				return View();
+			}
+		}
+
 
 	}
 }
