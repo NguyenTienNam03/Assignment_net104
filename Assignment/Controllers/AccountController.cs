@@ -523,10 +523,17 @@ namespace Assignment.Controllers
 			}
 			return View();
 		}
-		public IActionResult ForgotPassWord(string password, string repassword)
+		[HttpGet]
+		public IActionResult ForgotPassWord()
+		{
+			return View();
+		}
+		[HttpPost]
+		public IActionResult ChangePass(string password, string repassword)
 		{
 			string email = HttpContext.Session.GetString("Email");
 			var iduser = _iuser.GetAllUsers().Where(c => c.Email == email).FirstOrDefault();
+			// Password ok 
 			if (password == repassword)
 			{
 				_iuser.UpdateUser(new User()
@@ -543,10 +550,11 @@ namespace Assignment.Controllers
 				});
 				return RedirectToAction("Login", "Account");
 			}
+			// Sai request không trả về trang ForgotPassWord
 			else
 			{
 				ViewBag.Error = "Mật khẩu không trùng khớp";
-				return View();
+				return RedirectToAction("ForgotPassWord", "Account");
 			}
 		}
 
